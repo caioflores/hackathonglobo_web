@@ -125,10 +125,16 @@ class Topics extends Component {
         if (rightComponent === 1) {
           return <News news={news} timeRange={timeRange} />;
         } else if (rightComponent === 2) {
-          const points = geolocation.map((point) => [ point.lat, point.lng, point.radius ]);
+          const points = [];
 
-          return (<HeatMap data={points} center={[-15.33240, -48.081619]} />)
-        } else if (rightComponent === 3) {
+          for (var i = 0; i < 10; ++i) {
+                var p = [-22.9068467 + (Math.random()*0.5), -43.1728965 + (Math.random()*0.5),Math.random() * 1000];
+                points.push(p);
+            }
+
+          return (<HeatMap data={points} center={[-15.33240,-48.081619]} />)
+        } 
+        /*else if (rightComponent === 3) {
           if (words.length > 0) {
               return (
                 <div>
@@ -157,7 +163,7 @@ class Topics extends Component {
             } else {
               return <h6 className="text-center">Sem dados</h6>;
             }
-        }
+        }*/
     };
 
     const renderResolutions = () => {
@@ -238,14 +244,14 @@ class Topics extends Component {
                       }
                       }>Mapa de Calor</a>
                   </li>
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                       <a className={getNavLink(3, RIGHT)} href="#" onClick={
                         (e) => {
                         e.preventDefault();
                         this.setState({ rightComponent: 3 });
                       }
                       }>Nuvem de Palavras</a>
-                  </li>
+                  </li>*/}
                 </ul>
               </div>
               <div className="card-block">
