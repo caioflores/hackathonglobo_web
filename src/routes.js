@@ -6,7 +6,6 @@ import Full from './containers/Full/'
 // import Simple from './containers/Simple/'
 
 import Dashboard from './views/Dashboard/'
-import Upload from './views/Upload/'
 import Topics from 'views/Topics'
 
 export default (
@@ -15,7 +14,6 @@ export default (
       <IndexRoute component={Dashboard} />
       <Route path="dashboard" name="Dashboard" component={Dashboard} />
       <Route path="topicos/:topicName" name="Tópico" component={Topics} />
-      <Route path="upload" name="Upload" component={Upload} />
     </Route>
   </Router>
 );

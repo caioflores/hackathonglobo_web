@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class News extends Component {
   state = {
-    card: false 
+    card: false
+  }
+
+  componentDidMount() {
+    axios.get('http://ddb7351b.ngrok.io/api/news')
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   render() {
