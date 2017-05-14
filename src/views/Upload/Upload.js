@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Dropzone from 'react-dropzone'
+import DropzoneComponent from 'react-dropzone-component';
+import './Upload.css';
 
 class Upload extends Component {
 
@@ -8,18 +9,16 @@ class Upload extends Component {
     this.state = { files: [] }
   }
 
-  onDrop(files) {
-    this.setState({
-      files
-    });
-  }
-
   render() {
-    const dropzoneStyle = {
-      height: '50px',
-      width: '300px',
-      border: '1px solid rgba(0, 0, 0, 0.125)',
-      textAlign: 'center',
+    var djsConfig = {
+        addRemoveLinks: true,
+        params: {
+            myParameter: "I'm a parameter!"
+        }
+    };
+
+    var componentConfig = {
+        postUrl: '/uploadHandler'
     };
     return (
       <div className="animated fadeIn">
@@ -29,21 +28,9 @@ class Upload extends Component {
               <div className="card-block">
                 <div className="row">
                   <div className="col-sm-12 text-center">
-                    <section>
-                      <div className="dropzone">
-                        <Dropzone onDrop={this.onDrop.bind(this)} style={dropzoneStyle}>
-                          <p>Insira a imagem aqui</p>
-                        </Dropzone>
-                      </div>
-                      <aside>
-                        <span>Arquivos</span>
-                        <ul>
-                          {
-                            this.state.files.map(f => <li>{f.name} - {f.size} bytes</li>)
-                          }
-                        </ul>
-                      </aside>
-                    </section>
+                    <div className="dropzone-div">
+                      <DropzoneComponent config={componentConfig} djsConfig={djsConfig} />
+                    </div>
                   </div>
                 </div>
                 <div className="row">
