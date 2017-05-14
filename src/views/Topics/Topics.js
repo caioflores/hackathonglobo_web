@@ -86,7 +86,7 @@ class Topics extends Component {
       const time = words.length > 0 ? DELAY : 0;
       this.timeout = setTimeout(() => {
         console.log(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}`);
-        axios.get(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}`)
+        axios.get(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end + 1000}`)
         .then((response) => {
           this.setState({
             news: response.data
