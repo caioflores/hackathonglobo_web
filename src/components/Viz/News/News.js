@@ -34,11 +34,11 @@ class News extends Component {
               </div>
             </div>)
           )
+        )
       }
     }
     return (
-      // {renderNews()}
-      <h1>hey</h1>
+      renderNews()
     );
   }
 }
