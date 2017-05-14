@@ -94,6 +94,8 @@ class Topics extends Component {
   handleTimeRangeChange = (timeRange) => {
     const { words, series, resolutions } = this.state;
 
+    console.log(timeRange);
+
     this.setState({ timeRange }, () => {
       if (this.timeout != null) {
         clearTimeout(this.timeout);
@@ -122,16 +124,6 @@ class Topics extends Component {
       }
     }
   }
-
-  // handleChartClick = (date) => {
-  //   const { words, maxWords } = this.state;
-  //   const formatted = moment(date).format("DD/MM/YYYY");
-  //   const max = maxWords ? maxWords : words.length;
-  //   const qWords = words.slice(words.length - max, words.length - max + 5).map(w => w.text).reduce((a, w) => a += " " + w);
-  //   const query = formatted + " " + qWords;
-  //   console.log(query);
-  //   this.setState({ query });
-  // }
 
   handleWordsSizeChange = (e) => {
     const maxWords = parseInt(e.target.value, 10);

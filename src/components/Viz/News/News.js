@@ -3,22 +3,21 @@ import axios from 'axios';
 
 class News extends Component {
   state = {
-    card: false
+    card: false,
+    news: null
   }
 
   componentDidMount() {
-    var resp = [];
-    resp = axios.get('http://ddb7351b.ngrok.io/api/news')
-      .then(function (response) {
-        return response.data;
+    axios.get('http://ddb7351b.ngrok.io/api/news')
+      .then((response) => {
+        console.log(response);
+        this.setState({
+          news: response.data
+        });
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
-
-    this.setState({
-      news: resp
-    })
   }
 
   render() {
@@ -27,7 +26,7 @@ class News extends Component {
     const renderNews = () => {
       if (news != null) {
           return (
-            news.map((el, i) => (
+            news.data.map((el, i) => (
             <div key={i} className="card">
               <div className="card-block">
                 {el.content}
@@ -38,7 +37,7 @@ class News extends Component {
       }
     }
     return (
-      renderNews()
+      <div>{renderNews()}</div>
     );
   }
 }
