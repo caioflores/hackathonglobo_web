@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import DropzoneComponent from 'react-dropzone-component';
 import './Upload.css';
+import Clarifai from 'clarifai';
+
 
 class Upload extends Component {
 
@@ -10,10 +12,25 @@ class Upload extends Component {
   }
 
   render() {
+    var app = new Clarifai.App(
+      'hl9kSi-XMtSvKWPHoobeKWOi_VeHqRATUZme1CnE',
+      'gbU8quUBGF8FM9Ko4ri129DR2T0CAmycuQasgFaR'
+    );
+
+    app.models.predict("aaa03c23b3724a16a56b629203edc62c", "http://meioambiente.culturamix.com/blog/wp-content/gallery/4_90/historico-de-enchentes-no-brasil-4.jpg").then(
+      function(response) {
+        // do something with response
+        console.log(response);
+      },
+      function(err) {
+        // there was an error
+      }
+    );
+
     var djsConfig = {
         addRemoveLinks: true,
         params: {
-            myParameter: "I'm a parameter!"
+          myParameter: "I'm a parameter!"
         }
     };
 

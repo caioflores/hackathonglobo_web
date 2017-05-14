@@ -56,11 +56,11 @@ const SeriesChart = React.createClass({
     const topic = this.props.topic;
     const start = this.props.start;
 
-    if (topic !== nextProps.topic 
+    if (topic !== nextProps.topic
         || start !== nextProps.start) {
           this.setState(this.buildSeries(nextProps), () => {
             const { timeRange } = this.state;
-            this.props.onTimeRangeChange({ 
+            this.props.onTimeRangeChange({
               start: moment(timeRange.begin()).valueOf(),
               end: moment(timeRange.end()).valueOf()
             });
@@ -73,11 +73,11 @@ const SeriesChart = React.createClass({
     });
   },
   handleTimeRangeChange(timeRange) {
-    this.props.onTimeRangeChange({ 
+    this.props.onTimeRangeChange({
       start: moment(timeRange.begin()).valueOf(),
       end: moment(timeRange.end()).valueOf()
     });
-    
+
     this.setState({
       timeRange,
       brushRange: timeRange
@@ -85,7 +85,7 @@ const SeriesChart = React.createClass({
   },
   componentDidMount() {
     const { timeRange } = this.state;
-    this.props.onTimeRangeChange({ 
+    this.props.onTimeRangeChange({
       start: moment(timeRange.begin()).valueOf(),
       end: moment(timeRange.end()).valueOf()
     });
@@ -186,7 +186,7 @@ const SeriesChart = React.createClass({
                 minTime={timeSeries.range().begin()}
                 trackerPosition={this.state.tracker}>
                 <ChartRow height="80" debug={false}>
-                  <Brush 
+                  <Brush
                     timeRange={this.state.brushRange}
                     onTimeRangeChanged={this.handleTimeRangeChange} />
                   <YAxis
