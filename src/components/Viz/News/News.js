@@ -7,26 +7,38 @@ class News extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://ddb7351b.ngrok.io/api/news')
+    var resp = [];
+    resp = axios.get('http://ddb7351b.ngrok.io/api/news')
       .then(function (response) {
-        console.log(response);
+        return response.data;
       })
       .catch(function (error) {
         console.log(error);
       });
+
+    this.setState({
+      news: resp
+    })
   }
 
   render() {
+    const { news } = this.state;
 
-    return (
-            <div className="card">
-              <div className="card-header">
-                some title
-              </div>
+    const renderNews = () => {
+      if (news != null) {
+          return (
+            news.map((el, i) => (
+            <div key={i} className="card">
               <div className="card-block">
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias dolores iure inventore esse dolorem eius nulla voluptatibus sed quidem dignissimos libero, fugit sint quasi harum fugiat cupiditate, laboriosam debitis omnis!
+                {el.content}
               </div>
-            </div>
+            </div>)
+          )
+      }
+    }
+    return (
+      // {renderNews()}
+      <h1>hey</h1>
     );
   }
 }
