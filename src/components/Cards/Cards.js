@@ -13,8 +13,13 @@ class Cards extends Component {
               <div className="col-sm-6">
                 <div key={i} className="card">
                   <div className="card-block mh-380px pb">
-                    <p>{el.content}</p>
-                    <img src={el.image} style={{width:"100%"}} className="img-thumbnail responsive"/>
+                    <div className="card-head">
+                      {el.user_name}
+                    </div>
+                    <div className="card-block">
+                      <p>{el.content}</p>
+                      <img src={el.image} style={{width:"100%"}} className="img-thumbnail responsive"/>
+                    </div>
                   </div>
                 </div>
             </div>)

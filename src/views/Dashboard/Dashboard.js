@@ -20,7 +20,7 @@ const data1 = {
   labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
   datasets: [
     {
-      label: 'Alagamentos',
+      label: 'Alagamento',
       backgroundColor: brandPrimary,
       borderColor: 'rgba(255,255,255,.55)',
       data: randomArr(7)
@@ -127,12 +127,12 @@ class Dashboard extends Component {
           <div className="col-sm-4">
             <div className="card card-inverse card-primary">
               <div className="chart-wrapper px-3">
-                <Link to="topicos/alagamentos"><ChartDash topic="Alagamentos" total={121} data={data1} opts={cardChartOpts1} /></Link>
+                <Link to="topicos/alagamento"><ChartDash topic="Alagamentos" total={15} data={data1} opts={cardChartOpts1} /></Link>
               </div>
             </div>
             <div className="card card-primary">
               <div className="chart-wrapper px-3">
-                <Link to="topicos/alagamentos"><ChartDash topic="Incêndios" total={121} data={data2} opts={cardChartOpts1} /></Link>
+                <Link to="topicos/incendio"><ChartDash topic="Incêndios" total={12} data={data2} opts={cardChartOpts1} /></Link>
               </div>
             </div>
           </div>

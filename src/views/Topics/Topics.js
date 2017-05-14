@@ -85,8 +85,8 @@ class Topics extends Component {
       const DELAY = 1000; // 1 second
       const time = words.length > 0 ? DELAY : 0;
       this.timeout = setTimeout(() => {
-        console.log(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}`);
-        axios.get(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end + 1000}`)
+        console.log(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}&category=${this.props.params.topicName}`);
+        axios.get(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end + 1000}&category=${this.props.params.topicName}`)
         .then((response) => {
           this.setState({
             news: response.data
@@ -100,29 +100,13 @@ class Topics extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const producerId = parseInt(nextProps.match.params.id, 10);
-
-    if (this.topic != null) {
-      if (this.topic.id !== producerId) {
-        this.setState({
-          series: [],
-          words: [],
-          resolutions: [],
-          timeRange: null,
-          isLoading: false
-        });
-      }
-    }
-  }
-
   handleWordsSizeChange = (e) => {
     const maxWords = parseInt(e.target.value, 10);
     this.setState({ maxWords });
   }
 
   componentDidMount() {
-    axios.get('https://ddb7351b.ngrok.io/api/graph')
+    axios.get(`https://ddb7351b.ngrok.io/api/graph?category=${this.props.params.topicName}`)
     .then((res) => {
       const series = Object.keys(res.data.data).map((el) => {
         return { x: moment(el).valueOf(), y: res.data.data[el] }
@@ -135,7 +119,7 @@ class Topics extends Component {
     const { leftComponent, rightComponent, tag, series, words, isLoading, resolutions, maxWords, timeRange, geolocation, news } = this.state;
 
     
-    const topic = "alagamento";
+    const topic = this.props.params.topicName;
 
     const renderRightComponent = () => {
         if (rightComponent === 1) {
