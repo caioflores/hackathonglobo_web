@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import seriesData from './data.json';
 import wordCloudData from './wordcloud.json';
 
@@ -34,32 +35,15 @@ class Topics extends Component {
     rightComponent: 1,
     maxWords: null,
     geolocationId: null,
-    geolocation: null
+    geolocation: null,
+    news: null
   }
 
   updateWordCloud = () => {
-    const { tag, timeRange, maxWords } = this.state;
+    const { timeRange, maxWords } = this.state;
 
-    if (tag != null && timeRange != null) {
-      // backend.getWordCloud(tag.value, timeRange)
-      // .then((words) => {
-      // const max = maxWords ? maxWords : words.length;
-      // const query = words.slice(words.length - max, words.length - max + 5).map(w => w.text).reduce((a, w) => a += " " + w);
-
-      //   this.setState({ words, query, isLoading: false });
-      // }).catch((error) => {
-      //    this.setState({ words: [], isLoading: false });
-      // });
-    }
-  }
-
-  updateGeolocation = () => {
-    const { geolocationId, timeRange } = this.state;
-
-    if (geolocationId != null && timeRange != null) {
-      // backend.getGeolocations(geolocationId, timeRange).then((res) => {
-      //   this.setState({ geolocation: res.data });
-      // });
+    if (timeRange != null) {
+      
     }
   }
 
@@ -93,9 +77,7 @@ class Topics extends Component {
 
   handleTimeRangeChange = (timeRange) => {
     const { words, series, resolutions } = this.state;
-
-    console.log(timeRange);
-
+    
     this.setState({ timeRange }, () => {
       if (this.timeout != null) {
         clearTimeout(this.timeout);
@@ -103,8 +85,17 @@ class Topics extends Component {
       const DELAY = 1000; // 1 second
       const time = words.length > 0 ? DELAY : 0;
       this.timeout = setTimeout(() => {
-        this.updateWordCloud();
-        this.updateGeolocation();
+        console.log(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}`);
+        axios.get(`https://ddb7351b.ngrok.io/api/news?initial_date=${timeRange.start}&final_date=${timeRange.end}`)
+        .then((response) => {
+          this.setState({
+            news: response.data
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        // this.updateWordCloud();
       }, time);
     });
   }
@@ -131,52 +122,58 @@ class Topics extends Component {
   }
 
   componentDidMount() {
-    this.setState({ series: seriesData, words: wordCloudData });
+    axios.get('https://ddb7351b.ngrok.io/api/graph')
+    .then((res) => {
+      const series = Object.keys(res.data.data).map((el) => {
+        return { x: moment(el).valueOf(), y: res.data.data[el] }
+      });
+      this.setState({ series: { data: series, length: series.length }, words: wordCloudData });
+    }).catch((err) => console.log(err));
   }
 
   render() {
-    const { leftComponent, rightComponent, tag, series, words, isLoading, resolutions, query, maxWords, timeRange, geolocation } = this.state;
+    const { leftComponent, rightComponent, tag, series, words, isLoading, resolutions, maxWords, timeRange, geolocation, news } = this.state;
 
     
     const topic = "alagamento";
 
     const renderRightComponent = () => {
-      if (rightComponent === 1) {
-        if (words.length > 0) {
-          return (
-            <div>
-              <div className="form-group row">
-                <label htmlFor="maxwords-input" className="col-5 col-form-label">Máximo de palavras</label>
-                <div className="col-5">
-                  <input className="form-control" type="number" id="maxwords-input" max={words.length} min="5" size="3"
-                    value={maxWords ? maxWords : words.length} 
-                    onChange={this.handleWordsSizeChange}
-                  />
-                </div>
-              </div>
-              <WordCloud
-                data={words}
-                width={300}
-                height={300}
-                colors={colors}
-                color="#999"
-                maxWords={maxWords}
-                onClick={(word) => alert(word)}
-                padding={1} />
-            </div>
-          );
-        } else if (isLoading) {
-          return <h6 className="text-center">Carregando...</h6>;
-        } else {
-          return <h6 className="text-center">Sem dados</h6>;
-        }
-      } else if (rightComponent === 2) {
-        return <News query={query} timeRange={timeRange} />;
-      } else if (rightComponent === 3) {
-        const points = geolocation.map((point) => [ point.lat, point.lng, point.radius ]);
+        if (rightComponent === 1) {
+          return <News news={news} timeRange={timeRange} />;
+        } else if (rightComponent === 2) {
+          const points = geolocation.map((point) => [ point.lat, point.lng, point.radius ]);
 
-        return (<HeatMap data={points} center={[-15.33240, -48.081619]} />)
-      }
+          return (<HeatMap data={points} center={[-15.33240, -48.081619]} />)
+        } else if (rightComponent === 3) {
+          if (words.length > 0) {
+              return (
+                <div>
+                  <div className="form-group row">
+                    <label htmlFor="maxwords-input" className="col-5 col-form-label">Máximo de palavras</label>
+                    <div className="col-5">
+                      <input className="form-control" type="number" id="maxwords-input" max={words.length} min="5" size="3"
+                        value={maxWords ? maxWords : words.length} 
+                        onChange={this.handleWordsSizeChange}
+                      />
+                    </div>
+                  </div>
+                  <WordCloud
+                    data={words}
+                    width={300}
+                    height={300}
+                    colors={colors}
+                    color="#999"
+                    maxWords={maxWords}
+                    onClick={(word) => alert(word)}
+                    padding={1} />
+                </div>
+              );
+            } else if (isLoading) {
+              return <h6 className="text-center">Carregando...</h6>;
+            } else {
+              return <h6 className="text-center">Sem dados</h6>;
+            }
+        }
     };
 
     const renderResolutions = () => {
@@ -192,7 +189,7 @@ class Topics extends Component {
     const renderSeriesChart = () => {
       if (series.data) {
         return <SeriesChart
-                  series={seriesData}
+                  series={series}
                   topic={topic}
                   onTimeRangeChange={this.handleTimeRangeChange}
                   // onClick={this.handleChartClick}
@@ -241,29 +238,29 @@ class Topics extends Component {
                   <div className="card text-center">
                     <div className="card-header">
                       <ul className="nav nav-tabs card-header-tabs">
-                        <li className="nav-item">
-                          <a className={getNavLink(1, RIGHT)} href="#" onClick={
-                            (e) => {
-                            e.preventDefault();
-                            this.setState({ rightComponent: 1 });
-                          }
-                          }>Nuvem de Palavras</a>
-                      </li>
                       <li className="nav-item">
-                        <a className={getNavLink(2, RIGHT)} href="#" onClick={
+                        <a className={getNavLink(1, RIGHT)} href="#" onClick={
                           (e) => {
                           e.preventDefault();
-                          this.setState({ rightComponent: 2 });
+                          this.setState({ rightComponent: 1 });
                         }
                         }>Notícias</a>
                     </li>
                     <li className="nav-item">
+                      <a className={getNavLink(2, RIGHT)} href="#" onClick={
+                        (e) => {
+                        e.preventDefault();
+                        this.setState({ rightComponent: 2 });
+                      }
+                      }>Mapa de Calor</a>
+                  </li>
+                  <li className="nav-item">
                       <a className={getNavLink(3, RIGHT)} href="#" onClick={
                         (e) => {
                         e.preventDefault();
                         this.setState({ rightComponent: 3 });
                       }
-                      }>HeatMap</a>
+                      }>Nuvem de Palavras</a>
                   </li>
                 </ul>
               </div>
