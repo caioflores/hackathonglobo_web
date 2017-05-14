@@ -1,0 +1,12 @@
+.mh-380px {
+  min-height: 380px;
+  max-height: 380px;
+}
+
+.img-thumbnail {
+  max-height: 300px;
+}
+
+.pb {
+  padding-bottom: 20px;
+}

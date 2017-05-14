@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import ChartDash from 'components/ChartDash';
+import Cards from 'components/Cards';
 import { Link } from 'react-router';
+import axios from 'axios';
 
 const brandPrimary =  '#20a8d8';
+const brandDanger =   '#f86c6b';
 
 const randomArr = (num) => {
   let arr = [];
@@ -29,7 +32,7 @@ const data2 = {
   labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
   datasets: [
     {
-      label: 'Alagamentos',
+      label: 'Incêndios',
       backgroundColor: brandPrimary,
       borderColor: 'rgba(255,255,255,.55)',
       data: randomArr(7)
@@ -90,20 +93,48 @@ const cardChartOpts1 = {
 
 class Dashboard extends Component {
   state = {
-    card1: false
+    card1: false,
+    news: null
+  }
+
+  componentDidMount = () => {
+    this.timeout = setTimeout(() => {
+      axios.get(`https://ddb7351b.ngrok.io/api/news`)
+      .then((response) => {
+        this.setState({
+          news: response.data
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      // this.updateWordCloud();
+    }, 3000);
   }
 
   render() {
     const { total, topic } = this.props;
+    const { news } = this.state;
 
     return (
       <div className="animated fadeIn">
         <div className="row">
-          <div className="col-sm-6 col-lg-4">
-            <Link to="topicos/alagamentos"><ChartDash topic="Alagamentos" total={121} data={data1} opts={cardChartOpts1} /></Link>
+          <div className="col-sm-8">
+            <div className="row">
+              <Cards news={news}></Cards>
+            </div>
           </div>
-          <div className="col-sm-6 col-lg-4">
-            <Link to="topicos/incendios"><ChartDash topic="Incêndios" total={126} data={data2} opts={cardChartOpts1} /></Link>
+          <div className="col-sm-4">
+            <div className="card card-inverse card-primary">
+              <div className="chart-wrapper px-3">
+                <Link to="topicos/alagamentos"><ChartDash topic="Alagamentos" total={121} data={data1} opts={cardChartOpts1} /></Link>
+              </div>
+            </div>
+            <div className="card card-primary">
+              <div className="chart-wrapper px-3">
+                <Link to="topicos/alagamentos"><ChartDash topic="Incêndios" total={121} data={data2} opts={cardChartOpts1} /></Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
